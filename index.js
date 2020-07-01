@@ -1,21 +1,20 @@
-const { ApolloServer } = require('apollo-server')
-const typeDefs = require('./db/schema')
-const resolvers = require('./db/resolvers')
+const server = require('./src/server')
+const db = require('./src/lib/db')
 
-// servidor
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-  context: () => {
-    const miContext = 'Hola'
-    return { miContext }
-  }
-})
+async function main () {
+  await db.connect()
+  console.log('DB connected successfully')
+  // arrancar el servidor
+  server.listen().then(({ url }) => {
+    console.log(`Servidor listo en la URL ${url}`)
+  })
+}
 
-// arrancar el servidor
-server.listen().then(({ url }) => {
-  console.log(`Servidor listo en la URL ${url}`)
-})
+main()
+  .then(() => {
+    console.log('All already')
+  })
+  .catch(err => console.error('Error: ', err))
 
 // Concept of Graphql
 

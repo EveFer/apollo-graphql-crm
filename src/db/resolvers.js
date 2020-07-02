@@ -1,5 +1,6 @@
 const users = require('../useCases/users')
 const products = require('../useCases/products')
+const clients = require('../useCases/clients')
 
 // require('dotenv').config()
 
@@ -28,13 +29,39 @@ const resolvers = {
         const allProducts = await products.getAll()
         return allProducts
       } catch (error) {
-
+        throw new Error(error)
       }
     },
     getAProduct: async (_, { id }) => {
       try {
         const product = await products.getById(id)
         return product
+      } catch (error) {
+        throw new Error(error)
+      }
+    },
+    getAllClients: async () => {
+      try {
+        const allClients = await clients.getAll()
+        return allClients
+      } catch (error) {
+        throw new Error(error)
+      }
+    },
+    getClientsBySeller: async (_, { }, ctx) => {
+      try {
+        const { _id: seller } = ctx.user
+        const clientsBySeller = await clients.getBySeller(seller)
+        return clientsBySeller
+      } catch (error) {
+
+      }
+    },
+    getAClient: async (_, { id }, ctx) => {
+      try {
+        const { _id: seller } = ctx.user
+        const client = await clients.getById(id, seller)
+        return client
       } catch (error) {
         throw new Error(error)
       }
@@ -74,6 +101,33 @@ const resolvers = {
       try {
         await products.deleteById(id)
         return 'Product deleted successfully'
+      } catch (error) {
+        throw new Error(error)
+      }
+    },
+    newClient: async (_, { input }, ctx) => {
+      try {
+        const { _id: seller } = ctx.user
+        const clientCreated = await clients.create(input, seller)
+        return clientCreated
+      } catch (error) {
+        throw new Error(error)
+      }
+    },
+    updateClient: async (_, { id, input }, ctx) => {
+      try {
+        const { _id: seller } = ctx.user
+        const clientUpdated = await clients.updateById(id, input, seller)
+        return clientUpdated
+      } catch (error) {
+        throw new Error(error)
+      }
+    },
+    deleteClient: async (_, { id }, ctx) => {
+      try {
+        const { _id: seller } = ctx.user
+        await clients.deleteById(id, seller)
+        return 'Client successfully deleted'
       } catch (error) {
         throw new Error(error)
       }

@@ -26,10 +26,15 @@ async function updateById (id, newData) {
   return Product.findByIdAndUpdate(id, newData, { new: true })
 }
 
+function search (text) {
+  return Product.find({ $text: { $search: text } }).limit(10)
+}
+
 module.exports = {
   create,
   getAll,
   getById,
   deleteById,
-  updateById
+  updateById,
+  search
 }

@@ -1,4 +1,5 @@
 const Client = require('../models/clients')
+const Order = require('../models/Orders')
 
 async function create (clientData, seller) {
   const { email } = clientData
@@ -39,11 +40,38 @@ async function updateById (id, newData, seller) {
   return Client.findByIdAndUpdate(id, newData, { new: true })
 }
 
+function betterClients () {
+  return Order.aggregate([
+    { $match: { status: 'COMPLETADO' } },
+    {
+      $group: {
+        _id: '$Client',
+        total: { $sum: '$total' }
+      }
+    },
+    {
+      $lookup: {
+        from: 'Clients',
+        localField: '_id',
+        foreignField: '_id',
+        as: 'clients'
+      }
+    },
+    {
+      $limit: 10
+    },
+    {
+      $sort: { total: -1 }
+    }
+  ])
+}
+
 module.exports = {
   create,
   getAll,
   getById,
   deleteById,
   updateById,
-  getBySeller
+  getBySeller,
+  betterClients
 }

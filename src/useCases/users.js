@@ -1,4 +1,5 @@
 const User = require('../models/users')
+const Order = require('../models/orders')
 const bcrypt = require('bcrypt')
 const jwt = require('../lib/jwt')
 
@@ -32,9 +33,36 @@ function getByToken (token) {
   return User.findById(_id)
 }
 
+function betterSellers () {
+  return Order.aggregate([
+    { match: { status: 'COMPLETADO' } },
+    {
+      $group: {
+        _id: '$seller',
+        total: { $sum: '$total' }
+      }
+    },
+    {
+      $lookup: {
+        from: 'Users',
+        localField: '_id',
+        foreignField: '_id',
+        as: 'sellers'
+      }
+    },
+    {
+      $limit: 3
+    },
+    {
+      $sort: { total: -1 }
+    }
+  ])
+}
+
 module.exports = {
   create,
   login,
   getByToken,
-  getAll
+  getAll,
+  betterSellers
 }

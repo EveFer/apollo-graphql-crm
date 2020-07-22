@@ -18,4 +18,6 @@ const productsSchema = Schema({
   timestamps: true
 })
 
+productsSchema.index({ name: 'text' })
+
 module.exports = model('Product', productsSchema)

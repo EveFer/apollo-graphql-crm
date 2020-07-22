@@ -101,6 +101,30 @@ const resolvers = {
       } catch (error) {
         throw new Error(error)
       }
+    },
+    betterClients: async () => {
+      try {
+        const betterClients = await clients.betterClients()
+        return betterClients
+      } catch (error) {
+        throw new Error(error)
+      }
+    },
+    betterSellers: async () => {
+      try {
+        const betterSellers = await users.betterSellers()
+        return betterSellers
+      } catch (error) {
+
+      }
+    },
+    searchProducts: async (_, { text }) => {
+      try {
+        const searchedProducts = await products.search(text)
+        return searchedProducts
+      } catch (error) {
+        throw new Error(error)
+      }
     }
   },
   Mutation: {

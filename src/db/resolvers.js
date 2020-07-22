@@ -1,6 +1,7 @@
 const users = require('../useCases/users')
 const products = require('../useCases/products')
 const clients = require('../useCases/clients')
+const orders = require('../useCases/orders')
 
 // require('dotenv').config()
 
@@ -62,6 +63,41 @@ const resolvers = {
         const { _id: seller } = ctx.user
         const client = await clients.getById(id, seller)
         return client
+      } catch (error) {
+        throw new Error(error)
+      }
+    },
+    getOrders: async () => {
+      try {
+        const allOrders = await orders.getAll()
+        return allOrders
+      } catch (error) {
+        throw new Error(error)
+      }
+    },
+    getOrdersBySeller: async (_, {}, ctx) => {
+      try {
+        const { _id: sellerCurrent } = ctx.user
+        const allOrders = await orders.getBySeller(sellerCurrent)
+        return allOrders
+      } catch (error) {
+        throw new Error(error)
+      }
+    },
+    getAOrder: async (_, { id }, ctx) => {
+      try {
+        const { _id: sellerCurrent } = ctx.user
+        const order = await orders.getAOrder(id, sellerCurrent)
+        return order
+      } catch (error) {
+        throw new Error(error)
+      }
+    },
+    getOrdersByStatus: async (_, { status }, ctx) => {
+      try {
+        const { _id: sellerCurrent } = ctx.user
+        const allOrders = orders.getOrdersByStatus(status, sellerCurrent)
+        return allOrders
       } catch (error) {
         throw new Error(error)
       }
@@ -128,6 +164,33 @@ const resolvers = {
         const { _id: seller } = ctx.user
         await clients.deleteById(id, seller)
         return 'Client successfully deleted'
+      } catch (error) {
+        throw new Error(error)
+      }
+    },
+    newOrder: async (_, { input }, ctx) => {
+      try {
+        const { _id: seller } = ctx.user
+        const orderCreated = await orders.create(input, seller)
+        return orderCreated
+      } catch (error) {
+        throw new Error(error)
+      }
+    },
+    updateOrder: async (_, { id, input }, ctx) => {
+      try {
+        const { _id: seller } = ctx.user
+        const orderUpdated = await orders.updatedById(id, seller, input)
+        return orderUpdated
+      } catch (error) {
+        throw new Error(error)
+      }
+    },
+    deleteOrder: async (_, { id }, ctx) => {
+      try {
+        const { _id: seller } = ctx.user
+        await orders.deleteById(id, seller)
+        return 'Order deleted successfully'
       } catch (error) {
         throw new Error(error)
       }

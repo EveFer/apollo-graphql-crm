@@ -1,5 +1,5 @@
 const Client = require('../models/clients')
-const Order = require('../models/Orders')
+const Order = require('../models/orders')
 
 async function create (clientData, seller) {
   const { email } = clientData

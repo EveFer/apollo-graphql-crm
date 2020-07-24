@@ -133,7 +133,7 @@ const resolvers = {
         const user = await users.create(input)
         return user
       } catch (error) {
-        console.error('Error: ', error)
+        throw new Error(error)
       }
     },
     authentication: async (_, { input }) => {
@@ -146,7 +146,7 @@ const resolvers = {
         const newProduct = await products.create(input)
         return newProduct
       } catch (error) {
-        console.error('Error:', error)
+        throw new Error(error)
       }
     },
     updatedProduct: async (_, { id, input }) => {

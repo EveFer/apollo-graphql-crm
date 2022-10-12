@@ -11,7 +11,7 @@
   "author": "@EveFer",
   "license": "ISC",
   "dependencies": {
-    "apollo-server": "^2.15.0",
+    "apollo-server": "^2.25.4",
     "bcrypt": "^5.0.0",
     "dotenv": "^8.2.0",
     "jsonwebtoken": "^8.5.1",
